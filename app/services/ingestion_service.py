@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from datetime import date
 
 from sqlalchemy import select
@@ -42,6 +43,12 @@ async def run_ingestion(db: AsyncSession, req: IngestionRequest) -> IngestionRes
         limit=req.limit,
         api_key=settings.theirstack_api_key,
     )
+
+    # Post-fetch filter: drop jobs outside the target state.
+    # TheirStack's location_pattern is a regex on city names, which can match
+    # cities in other states (e.g., "Arlington" matches VA and TX).
+    _TX = re.compile(r"\bTX\b|Texas", re.IGNORECASE)
+    raw_jobs = [j for j in raw_jobs if _TX.search(j.location)]
 
     inserted = 0
     skipped = 0

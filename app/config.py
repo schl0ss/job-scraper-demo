@@ -22,7 +22,8 @@ class Settings(BaseSettings):
 
     ingestion_job_titles: list[str] = ["registered nurse", "RN", "nurse"]
     ingestion_location_pattern: str = (
-        "Dallas|Fort Worth|Plano|Frisco|Arlington|McKinney|Irving"
+        "Dallas.*TX|Fort Worth.*TX|Plano.*TX|Frisco.*TX|Arlington.*TX"
+        "|McKinney.*TX|Irving.*TX|Denton.*TX|Garland.*TX|Richardson.*TX"
     )
     ingestion_max_age_days: int = 7
     ingestion_limit: int = 100

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db, require_lead_ra
+from app.models.job_posting import JobPosting
 from app.models.user import User
 from app.schemas.admin import (
     DashboardStats, IngestionRequest, IngestionResult,
@@ -60,6 +62,23 @@ async def dedup_review_queue(
     _admin: User = Depends(require_lead_ra),
 ):
     return get_pending_review()
+
+
+@router.delete("/jobs/{job_id}")
+async def delete_job(
+    job_id: int,
+    db: AsyncSession = Depends(get_db),
+    _admin: User = Depends(require_lead_ra),
+):
+    result = await db.execute(select(JobPosting).where(JobPosting.id == job_id))
+    job = result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if job.status.value != "available":
+        raise HTTPException(status_code=409, detail="Can only delete available jobs")
+    await db.delete(job)
+    await db.commit()
+    return {"deleted": job_id}
 
 
 @router.get("/export/csv")
