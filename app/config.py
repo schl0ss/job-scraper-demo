@@ -1,4 +1,13 @@
+import os
+
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_raw_db_url = os.environ.get("DATABASE_URL", "")
+if _raw_db_url.startswith("postgresql://"):
+    os.environ["DATABASE_URL"] = _raw_db_url.replace(
+        "postgresql://", "postgresql+asyncpg://", 1
+    )
 
 
 class Settings(BaseSettings):
@@ -18,6 +27,14 @@ class Settings(BaseSettings):
     )
     ingestion_max_age_days: int = 7
     ingestion_limit: int = 100
+
+    @model_validator(mode="after")
+    def _fix_async_driver(self) -> "Settings":
+        if self.database_url.startswith("postgresql://"):
+            self.database_url = self.database_url.replace(
+                "postgresql://", "postgresql+asyncpg://", 1
+            )
+        return self
 
 
 settings = Settings()
