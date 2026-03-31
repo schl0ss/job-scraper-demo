@@ -4,11 +4,8 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from sqlalchemy import select
-
 from app.dependencies import get_db, require_lead_ra
-from app.models.user import User, UserRole
-from app.services.auth_service import hash_password
+from app.models.user import User
 from app.schemas.admin import (
     DashboardStats, IngestionRequest, IngestionResult,
     StaleReassignRequest,
@@ -20,24 +17,6 @@ from app.services.admin_service import (
 from app.services.ingestion_service import get_pending_review, run_ingestion
 
 router = APIRouter(prefix="/admin", tags=["admin"])
-
-
-@router.post("/bootstrap")
-async def bootstrap_lead_ra(db: AsyncSession = Depends(get_db)):
-    """One-time endpoint to create the initial Lead RA account.
-    Returns 409 if a lead_ra user already exists."""
-    result = await db.execute(select(User).where(User.role == UserRole.lead_ra))
-    if result.scalar_one_or_none():
-        from fastapi import HTTPException
-        raise HTTPException(status_code=409, detail="Lead RA already exists")
-    user = User(
-        email="lead@resumeaudit.study",
-        hashed_password=hash_password("ChangeMe123!"),
-        role=UserRole.lead_ra,
-    )
-    db.add(user)
-    await db.commit()
-    return {"message": "Lead RA created", "email": user.email}
 
 
 @router.get("/dashboard", response_model=DashboardStats)
