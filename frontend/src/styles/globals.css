@@ -539,3 +539,18 @@ tbody tr:hover { background: #faf9f7; }
 .back-link:hover { color: var(--accent); }
 .err-msg { color: #dc2626; font-size: 13px; margin-top: 8px; }
 .loading { color: var(--text-3); font-size: 13px; padding: 40px 0; text-align: center; font-family: var(--font-mono); }
+
+/* ─── Footer ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: auto;
+  padding: 24px 0 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+}
+.site-footer a {
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .12s;
+}
+.site-footer a:hover { color: var(--accent); }

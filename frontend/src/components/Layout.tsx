@@ -70,6 +70,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <main className="main-content">
         {children}
+        <footer className="site-footer">
+          Built by <a href="https://schloss-boss.ai" target="_blank" rel="noopener noreferrer">Matt Schlosser</a>
+        </footer>
       </main>
     </div>
   )
