@@ -41,6 +41,7 @@ async def run_ingestion(db: AsyncSession, req: IngestionRequest) -> IngestionRes
         location_pattern=location_pattern,
         max_age_days=req.max_age_days,
         limit=req.limit,
+        source_domain="indeed.com",
         api_key=settings.theirstack_api_key,
     )
 
