@@ -123,6 +123,32 @@ async def reassign_claim(
     return assignment
 
 
+async def list_submissions(db: AsyncSession) -> list[dict]:
+    """Return submission records with joined job + RA data."""
+    result = await db.execute(
+        select(Submission)
+        .options(
+            selectinload(Submission.job).selectinload(JobPosting.employer),
+            selectinload(Submission.ra),
+        )
+        .order_by(Submission.submitted_at.desc())
+    )
+    submissions = result.scalars().all()
+    return [
+        {
+            "job_code": s.job.job_code,
+            "job_title": s.job.title,
+            "employer": s.job.employer.canonical_name,
+            "location": s.job.location,
+            "ra_email": s.ra.email,
+            "outcome": s.outcome.value,
+            "notes": s.notes or "",
+            "submitted_at": s.submitted_at.isoformat(),
+        }
+        for s in submissions
+    ]
+
+
 async def export_submissions_csv(db: AsyncSession) -> str:
     result = await db.execute(
         select(Submission)

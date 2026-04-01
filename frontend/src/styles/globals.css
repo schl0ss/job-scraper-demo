@@ -18,6 +18,7 @@
   --claimed-bg:     #fffbeb; --claimed-fg:   #b45309; --claimed-dot:   #f59e0b;
   --submitted-bg:   #f0fdf4; --submitted-fg: #15803d; --submitted-dot: #22c55e;
   --excluded-bg:    #f9fafb; --excluded-fg:  #6b7280; --excluded-dot:  #9ca3af;
+  --expired-bg:     #fef2f2; --expired-fg:   #991b1b; --expired-dot:   #ef4444;
 
   /* education */
   --aa-bg: #faf5ff; --aa-fg: #6d28d9;
@@ -184,6 +185,8 @@ body {
 .badge.submitted .badge-dot  { background: var(--submitted-dot); }
 .badge.excluded   { background: var(--excluded-bg);   color: var(--excluded-fg); }
 .badge.excluded .badge-dot   { background: var(--excluded-dot); }
+.badge.expired    { background: var(--expired-bg);    color: var(--expired-fg); }
+.badge.expired .badge-dot    { background: var(--expired-dot); }
 .badge.aa  { background: var(--aa-bg); color: var(--aa-fg); }
 .badge.ba  { background: var(--ba-bg); color: var(--ba-fg); }
 .badge.unspecified { background: var(--un-bg); color: var(--un-fg); }
@@ -228,6 +231,9 @@ body {
 }
 .stat-card .stat-value.warn { color: #b45309; }
 .stat-card .stat-value.good { color: #15803d; }
+.stat-card-clickable { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.stat-card-clickable:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.stat-card-active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-lt); }
 
 /* ─── Tables ─────────────────────────────────────────────── */
 .table-wrap {

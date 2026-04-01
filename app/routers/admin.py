@@ -13,7 +13,7 @@ from app.schemas.admin import (
     StaleReassignRequest,
 )
 from app.services.admin_service import (
-    export_submissions_csv, get_dashboard_stats,
+    export_submissions_csv, get_dashboard_stats, list_submissions,
     mark_stale_claims, reassign_claim,
 )
 from app.services.ingestion_service import get_pending_review, run_ingestion
@@ -55,6 +55,14 @@ async def reassign(
 ):
     assignment = await reassign_claim(db, body.assignment_id, body.new_ra_user_id)
     return {"assignment_id": assignment.id, "new_ra_user_id": assignment.ra_user_id}
+
+
+@router.get("/submissions", response_model=list[dict])
+async def submissions_list(
+    db: AsyncSession = Depends(get_db),
+    _admin: User = Depends(require_lead_ra),
+):
+    return await list_submissions(db)
 
 
 @router.get("/dedup/review", response_model=list[dict])

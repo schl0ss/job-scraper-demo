@@ -106,5 +106,7 @@ export const api = {
     URL.revokeObjectURL(url)
   },
 
+  listSubmissions: () => request<any[]>('/admin/submissions'),
+
   getDedupReview: () => request<any[]>('/admin/dedup/review'),
 }
