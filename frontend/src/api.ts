@@ -20,6 +20,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       ...(options.headers || {}),
     },
   })
+  if (res.status === 401) {
+    localStorage.removeItem('token')
+    window.location.href = '/login'
+    throw new Error('Session expired')
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }))
     throw new Error(err.detail || `HTTP ${res.status}`)
