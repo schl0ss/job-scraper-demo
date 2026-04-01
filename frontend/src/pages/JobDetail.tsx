@@ -5,12 +5,10 @@ import { Job, SubmissionOutcome } from '../types'
 import { StatusBadge, EduBadge } from '../components/Badge'
 
 const OUTCOMES: { value: SubmissionOutcome; label: string }[] = [
-  { value: 'applied', label: 'Applied' },
-  { value: 'no_response', label: 'No response' },
-  { value: 'rejected', label: 'Rejected' },
-  { value: 'not_qualified', label: 'Not qualified' },
-  { value: 'duplicate', label: 'Duplicate posting' },
-  { value: 'no_longer_accepting', label: 'No longer accepting applications' },
+  { value: 'success', label: 'Submitted successfully' },
+  { value: 'expired', label: 'Posting expired / no longer active' },
+  { value: 'blocked', label: 'Required SSN or restricted information' },
+  { value: 'other', label: 'Other issue (see notes)' },
 ]
 
 export default function JobDetail() {
@@ -20,7 +18,7 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true)
   const [claiming, setClaiming] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [outcome, setOutcome] = useState<SubmissionOutcome>('applied')
+  const [outcome, setOutcome] = useState<SubmissionOutcome>('success')
   const [notes, setNotes] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -195,6 +193,12 @@ export default function JobDetail() {
             {job.status === 'excluded' && (
               <div style={{ textAlign: 'center', color: 'var(--text-3)', fontSize: 13, padding: '12px 0' }}>
                 This posting has been excluded.
+              </div>
+            )}
+
+            {job.status === 'expired' && (
+              <div style={{ textAlign: 'center', color: 'var(--expired-fg)', fontSize: 13, padding: '12px 0' }}>
+                This posting has expired.
               </div>
             )}
 

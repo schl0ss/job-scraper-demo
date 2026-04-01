@@ -1,7 +1,7 @@
 export type UserRole = 'ra' | 'lead_ra'
-export type JobStatus = 'available' | 'claimed' | 'submitted' | 'excluded'
+export type JobStatus = 'available' | 'claimed' | 'submitted' | 'excluded' | 'expired'
 export type EducationLevel = 'AA' | 'BA' | 'unspecified'
-export type SubmissionOutcome = 'applied' | 'no_response' | 'rejected' | 'not_qualified' | 'duplicate' | 'no_longer_accepting'
+export type SubmissionOutcome = 'success' | 'expired' | 'blocked' | 'other'
 
 export interface User {
   id: number
@@ -57,6 +57,7 @@ export interface DashboardStats {
   claimed: number
   submitted: number
   excluded: number
+  expired: number
   stale_claims: number
   per_ra: RAStats[]
 }

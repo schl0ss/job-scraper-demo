@@ -4,7 +4,7 @@ import { api } from '../api'
 import { Job, JobStatus, EducationLevel } from '../types'
 import { StatusBadge, EduBadge } from '../components/Badge'
 
-type SortKey = 'job_code' | 'title' | 'employer' | 'location' | 'education_level' | 'salary' | 'date_posted' | 'status'
+type SortKey = 'job_code' | 'title' | 'employer' | 'location' | 'education_level' | 'salary' | 'date_posted' | 'created_at' | 'status'
 type SortDir = 'asc' | 'desc'
 
 const accessors: Record<SortKey, (j: Job) => string | null> = {
@@ -15,6 +15,7 @@ const accessors: Record<SortKey, (j: Job) => string | null> = {
   education_level: j => j.education_level,
   salary: j => j.salary,
   date_posted: j => j.date_posted,
+  created_at: j => j.created_at,
   status: j => j.status,
 }
 
@@ -98,6 +99,7 @@ export default function Jobs() {
             <option value="claimed">Claimed</option>
             <option value="submitted">Submitted</option>
             <option value="excluded">Excluded</option>
+            <option value="expired">Expired</option>
           </select>
           <select className="filter-select" value={edu} onChange={e => setEdu(e.target.value)}>
             <option value="">All education levels</option>
@@ -128,6 +130,7 @@ export default function Jobs() {
                   <SortTh k="education_level">Edu</SortTh>
                   <SortTh k="salary">Salary</SortTh>
                   <SortTh k="date_posted">Posted</SortTh>
+                  <SortTh k="created_at">Added</SortTh>
                   <SortTh k="status">Status</SortTh>
                 </tr>
               </thead>
@@ -156,6 +159,9 @@ export default function Jobs() {
                     </td>
                     <td style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
                       {job.date_posted || '—'}
+                    </td>
+                    <td style={{ fontSize: 12, color: 'var(--text-3)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                      {new Date(job.created_at).toLocaleDateString()}
                     </td>
                     <td><StatusBadge status={job.status} /></td>
                   </tr>

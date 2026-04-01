@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { api } from '../api'
 import { DashboardStats, Job } from '../types'
 
-type Drilldown = 'available' | 'claimed' | 'submitted' | 'stale' | null
+type Drilldown = 'available' | 'claimed' | 'submitted' | 'expired' | 'stale' | null
 
 interface SubmissionRow {
   job_code: string
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
       if (key === 'submitted') {
         const data = await api.listSubmissions()
         setDrillSubs(data)
-      } else if (key === 'available' || key === 'claimed') {
+      } else if (key === 'available' || key === 'claimed' || key === 'expired') {
         const data = await api.listJobs({ status: key, limit: 200 })
         setDrillJobs(data)
       } else if (key === 'stale') {
@@ -76,6 +76,7 @@ export default function AdminDashboard() {
     { key: 'available', label: 'Available', value: stats.available },
     { key: 'claimed', label: 'Claimed', value: stats.claimed },
     { key: 'submitted', label: 'Submitted', value: stats.submitted, cls: 'good' },
+    { key: 'expired', label: 'Expired', value: stats.expired },
     { key: 'stale', label: 'Stale Claims', value: stats.stale_claims, cls: stats.stale_claims > 0 ? 'warn' : '' },
     { key: null, label: 'Completion', value: stats.total_jobs > 0 ? `${Math.round((stats.submitted / stats.total_jobs) * 100)}%` : '\u2014' },
   ]
@@ -111,6 +112,7 @@ export default function AdminDashboard() {
             <div className="section-title" style={{ marginBottom: 12 }}>
               {drilldown === 'available' && 'Available Jobs'}
               {drilldown === 'claimed' && 'Claimed Jobs'}
+              {drilldown === 'expired' && 'Expired Jobs'}
               {drilldown === 'submitted' && 'Submissions'}
               {drilldown === 'stale' && 'Stale Claims'}
             </div>

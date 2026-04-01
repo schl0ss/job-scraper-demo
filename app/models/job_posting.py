@@ -13,6 +13,7 @@ class JobStatus(str, enum.Enum):
     claimed = "claimed"
     submitted = "submitted"
     excluded = "excluded"
+    expired = "expired"
 
 
 class EducationLevelDB(str, enum.Enum):

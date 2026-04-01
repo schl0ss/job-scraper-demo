@@ -6,6 +6,7 @@ export function StatusBadge({ status }: { status: JobStatus }) {
     claimed: 'Claimed',
     submitted: 'Submitted',
     excluded: 'Excluded',
+    expired: 'Expired',
   }
   return (
     <span className={`badge ${status}`}>

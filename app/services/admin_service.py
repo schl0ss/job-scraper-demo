@@ -80,6 +80,7 @@ async def get_dashboard_stats(db: AsyncSession) -> DashboardStats:
         claimed=counts.get(JobStatus.claimed, 0),
         submitted=counts.get(JobStatus.submitted, 0),
         excluded=counts.get(JobStatus.excluded, 0),
+        expired=counts.get(JobStatus.expired, 0),
         stale_claims=stale_count,
         per_ra=per_ra,
     )

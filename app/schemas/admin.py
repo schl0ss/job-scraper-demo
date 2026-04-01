@@ -20,6 +20,7 @@ class DashboardStats(BaseModel):
     claimed: int
     submitted: int
     excluded: int
+    expired: int
     stale_claims: int
     per_ra: list[RAStats]
 

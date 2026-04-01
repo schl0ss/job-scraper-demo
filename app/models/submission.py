@@ -9,12 +9,10 @@ from app.db.base import Base
 
 
 class SubmissionOutcome(str, enum.Enum):
-    applied = "applied"
-    no_response = "no_response"
-    rejected = "rejected"
-    not_qualified = "not_qualified"
-    duplicate = "duplicate"
-    no_longer_accepting = "no_longer_accepting"
+    success = "success"
+    expired = "expired"
+    blocked = "blocked"
+    other = "other"
 
 
 class Submission(Base):
