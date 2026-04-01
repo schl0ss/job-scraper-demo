@@ -63,7 +63,7 @@ export default function Jobs() {
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>Job ID</th>
                   <th>Title</th>
                   <th>Employer</th>
                   <th>Location</th>
@@ -81,7 +81,7 @@ export default function Jobs() {
                     onClick={() => navigate(`/jobs/${job.id}`)}
                   >
                     <td style={{ color: 'var(--text-3)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>
-                      {job.id}
+                      {job.job_code || job.id}
                     </td>
                     <td>
                       <div className="td-title">{job.title}</div>

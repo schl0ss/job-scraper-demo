@@ -25,6 +25,7 @@ class JobPosting(Base):
     __tablename__ = "job_postings"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    job_code: Mapped[Optional[str]] = mapped_column(String(20), unique=True, nullable=True, index=True)
     theirstack_id: Mapped[Optional[int]] = mapped_column(Integer, unique=True, nullable=True, index=True)
     title: Mapped[str] = mapped_column(String(500), nullable=False)
     employer_id: Mapped[int] = mapped_column(

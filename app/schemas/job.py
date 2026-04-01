@@ -24,6 +24,7 @@ class JobOut(BaseModel):
     model_config = {"from_attributes": True}
 
     id: int
+    job_code: str | None
     title: str
     employer: EmployerOut
     location: str

@@ -17,6 +17,7 @@ export interface Employer {
 
 export interface Job {
   id: number
+  job_code: string | null
   title: string
   employer: Employer
   location: string

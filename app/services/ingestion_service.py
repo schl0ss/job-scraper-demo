@@ -4,7 +4,7 @@ import asyncio
 import re
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
@@ -55,6 +55,13 @@ async def run_ingestion(db: AsyncSession, req: IngestionRequest) -> IngestionRes
     skipped = 0
     review_additions = 0
 
+    # Determine next job_code sequence number (RA-0001, RA-0002, ...)
+    max_code = await db.execute(
+        select(func.max(JobPosting.job_code))
+    )
+    last_code = max_code.scalar_one_or_none()
+    next_seq = int(last_code.split("-")[1]) + 1 if last_code else 1
+
     # Build an in-memory registry seeded from the DB for this run
     registry = await _load_registry(db)
 
@@ -94,7 +101,11 @@ async def run_ingestion(db: AsyncSession, req: IngestionRequest) -> IngestionRes
             except ValueError:
                 pass
 
+        job_code = f"JOB-{next_seq:06d}"
+        next_seq += 1
+
         job = JobPosting(
+            job_code=job_code,
             theirstack_id=raw.theirstack_id,
             title=raw.title,
             employer_id=emp_id,
