@@ -1,15 +1,62 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import { Job, JobStatus, EducationLevel } from '../types'
 import { StatusBadge, EduBadge } from '../components/Badge'
+
+type SortKey = 'job_code' | 'title' | 'employer' | 'location' | 'education_level' | 'salary' | 'date_posted' | 'status'
+type SortDir = 'asc' | 'desc'
+
+const accessors: Record<SortKey, (j: Job) => string | null> = {
+  job_code: j => j.job_code,
+  title: j => j.title,
+  employer: j => j.employer.canonical_name,
+  location: j => j.location,
+  education_level: j => j.education_level,
+  salary: j => j.salary,
+  date_posted: j => j.date_posted,
+  status: j => j.status,
+}
 
 export default function Jobs() {
   const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(true)
   const [status, setStatus] = useState<string>('')
   const [edu, setEdu] = useState<string>('')
+  const [sortKey, setSortKey] = useState<SortKey>('job_code')
+  const [sortDir, setSortDir] = useState<SortDir>('asc')
   const navigate = useNavigate()
+
+  const sortedJobs = useMemo(() => {
+    const get = accessors[sortKey]
+    return [...jobs].sort((a, b) => {
+      const va = get(a)
+      const vb = get(b)
+      if (va == null && vb == null) return 0
+      if (va == null) return 1
+      if (vb == null) return -1
+      const cmp = va.localeCompare(vb, undefined, { numeric: true, sensitivity: 'base' })
+      return sortDir === 'asc' ? cmp : -cmp
+    })
+  }, [jobs, sortKey, sortDir])
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortKey(key)
+      setSortDir('asc')
+    }
+  }
+
+  const SortTh = ({ k, children }: { k: SortKey; children: React.ReactNode }) => (
+    <th className="sortable-th" onClick={() => toggleSort(k)}>
+      {children}
+      <span className="sort-arrow">
+        {sortKey === k ? (sortDir === 'asc' ? ' \u25B2' : ' \u25BC') : ' \u25BD'}
+      </span>
+    </th>
+  )
 
   const load = async () => {
     setLoading(true)
@@ -63,18 +110,18 @@ export default function Jobs() {
             <table>
               <thead>
                 <tr>
-                  <th>Job ID</th>
-                  <th>Title</th>
-                  <th>Employer</th>
-                  <th>Location</th>
-                  <th>Edu</th>
-                  <th>Salary</th>
-                  <th>Posted</th>
-                  <th>Status</th>
+                  <SortTh k="job_code">Job ID</SortTh>
+                  <SortTh k="title">Title</SortTh>
+                  <SortTh k="employer">Employer</SortTh>
+                  <SortTh k="location">Location</SortTh>
+                  <SortTh k="education_level">Edu</SortTh>
+                  <SortTh k="salary">Salary</SortTh>
+                  <SortTh k="date_posted">Posted</SortTh>
+                  <SortTh k="status">Status</SortTh>
                 </tr>
               </thead>
               <tbody>
-                {jobs.map(job => (
+                {sortedJobs.map(job => (
                   <tr
                     key={job.id}
                     className="tr-link"

@@ -537,6 +537,16 @@ tbody tr:hover { background: #faf9f7; }
   transition: color .12s;
 }
 .back-link:hover { color: var(--accent); }
+/* ─── Sortable table headers ──────────────────────────────── */
+.sortable-th {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.sortable-th:hover { color: var(--accent); }
+.sort-arrow { font-size: 10px; color: var(--text-3); }
+.sortable-th:hover .sort-arrow { color: var(--accent); }
+
 .err-msg { color: #dc2626; font-size: 13px; margin-top: 8px; }
 .loading { color: var(--text-3); font-size: 13px; padding: 40px 0; text-align: center; font-family: var(--font-mono); }
 
