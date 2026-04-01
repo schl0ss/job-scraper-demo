@@ -8,6 +8,7 @@ from app.models.job_posting import JobStatus, EducationLevelDB
 class JobFilter(BaseModel):
     status: JobStatus | None = None
     education_level: EducationLevelDB | None = None
+    job_code: str | None = None
     metro: str | None = None
     limit: int = 50
     offset: int = 0

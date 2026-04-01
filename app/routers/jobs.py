@@ -20,6 +20,7 @@ router = APIRouter(prefix="/jobs", tags=["jobs"])
 async def list_job_queue(
     status: JobStatus | None = Query(None),
     education_level: EducationLevelDB | None = Query(None),
+    job_code: str | None = Query(None),
     limit: int = Query(50, le=200),
     offset: int = Query(0),
     db: AsyncSession = Depends(get_db),
@@ -28,6 +29,7 @@ async def list_job_queue(
     filters = JobFilter(
         status=status,
         education_level=education_level,
+        job_code=job_code,
         limit=limit,
         offset=offset,
     )

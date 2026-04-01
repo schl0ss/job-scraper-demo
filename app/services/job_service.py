@@ -30,6 +30,12 @@ async def list_jobs(db: AsyncSession, filters: JobFilter) -> list[JobPosting]:
         stmt = stmt.where(JobPosting.status == filters.status)
     if filters.education_level:
         stmt = stmt.where(JobPosting.education_level == filters.education_level)
+    if filters.job_code:
+        try:
+            full_code = f"JOB-{int(filters.job_code):06d}"
+        except ValueError:
+            full_code = filters.job_code
+        stmt = stmt.where(JobPosting.job_code == full_code)
     result = await db.execute(stmt)
     return list(result.scalars().all())
 

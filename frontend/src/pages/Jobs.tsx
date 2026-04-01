@@ -23,6 +23,7 @@ export default function Jobs() {
   const [loading, setLoading] = useState(true)
   const [status, setStatus] = useState<string>('')
   const [edu, setEdu] = useState<string>('')
+  const [jobCode, setJobCode] = useState<string>('')
   const [sortKey, setSortKey] = useState<SortKey>('job_code')
   const [sortDir, setSortDir] = useState<SortDir>('asc')
   const navigate = useNavigate()
@@ -64,6 +65,7 @@ export default function Jobs() {
       const data = await api.listJobs({
         status: status || undefined,
         education_level: edu || undefined,
+        job_code: jobCode || undefined,
         limit: 100,
       })
       setJobs(data)
@@ -71,7 +73,7 @@ export default function Jobs() {
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [status, edu])
+  useEffect(() => { load() }, [status, edu, jobCode])
 
   return (
     <>
@@ -81,6 +83,15 @@ export default function Jobs() {
       </div>
       <div className="page-body">
         <div className="filters">
+          <input
+            className="filter-select"
+            type="text"
+            inputMode="numeric"
+            placeholder="Job #"
+            value={jobCode}
+            onChange={e => setJobCode(e.target.value.replace(/\D/g, ''))}
+            style={{ width: 80 }}
+          />
           <select className="filter-select" value={status} onChange={e => setStatus(e.target.value)}>
             <option value="">All statuses</option>
             <option value="available">Available</option>
